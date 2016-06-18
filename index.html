@@ -1,0 +1,54 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>AI Search</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script language="javascript" type="text/javascript" src="jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
+  <script language="javascript" type="text/javascript" src="AISearch.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script type="text/javascript">
+  var FitFunc = []
+	function FitFuncEval(){
+		FitFunc = []
+		st = $("#MathFunc")[0].value
+		for (var i = 0; i < 14; i += 0.1) {
+			x = i;
+			FitFunc.push([i, eval(st)]);
+		}
+    $.plot("#placeholder", [FitFunc])
+	}
+	$(function() {
+		FitFuncEval()
+
+    $("#startAI").click(function(){
+			FitFuncEval()
+      AISearch.InicializaPoblacion()
+      AISearch.EvaluaDesempeno()
+      AISearch.plot("#placeholder", FitFunc)
+    })
+
+		$( "#slider" ).slider({
+		  slide: function( event, ui ) {
+				AISearch.PopSize = ui.value
+			}
+		});
+	});
+
+	</script>
+</head>
+
+<body>
+		<div class="demo-container">
+			<div id="placeholder" style="width: 600px;height:300px;"></div>
+		</div>
+    <button id="startAI">Random Positions</button>
+		<br />
+    <div id="slider" style="width: 590px;margin-top: 10px;margin-left: 10px;"></div>
+		<br />
+		<label>Función: </label>
+		<input type="text" id="MathFunc" value="Math.sin(x*8)*Math.abs(x-8)">
+</body>
+</html>
