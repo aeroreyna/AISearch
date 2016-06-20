@@ -1,5 +1,5 @@
 AISearch = {
-  PopSize:5,
+  PopSize:7,
   NoIter:10,
   NoDim : 1,
   InicializaPoblacion : function(){

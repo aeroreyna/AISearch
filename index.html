@@ -33,7 +33,7 @@
 
 		$( "#slider" ).slider({
 		  slide: function( event, ui ) {
-				AISearch.PopSize = ui.value
+				AISearch.PopSize = ui.value > 7 ? ui.value : 7
 			}
 		});
 	});
