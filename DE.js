@@ -1,5 +1,3 @@
-DE = {}
+AISearch.DEOperadores = function(AI){
 
-DE.Operadores = function(AI){
-  
 }
