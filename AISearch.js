@@ -1,36 +1,35 @@
-AISearch = {PopSize:5, NoIter:10, NoDim : 1};
+AISearch = {
+  PopSize:5,
+  NoIter:10,
+  NoDim : 1,
+  InicializaPoblacion : function(){
+    pob = []
+    for (i=0;i<this.PopSize;i++){
+      pob.push(Math.random()*14)
+    }
+    this.Pob = pob
+  },
+  EvaluaDesempeno : function(){
+    fit = []
+    for (i=0;i<this.PopSize;i++){
+      fit.push(this.Fitness(this.Pob[i]))
+    }
+    this.FitPob = fit
+  },
+  Start : function(){
+    for (i=0; i<this.NoIter; i++){
 
-AISearch.InicializaPoblacion = function(){
-  pob = []
-  for (i=0;i<AISearch.PopSize;i++){
-    pob.push(Math.random()*14)
+    }
+  },
+  Fitness : function(x){
+    st = $("#MathFunc")[0].value
+    return eval(st)
+  },
+  plot : function(divTag, all){
+    d1 = []
+    for (i=0;i<this.PopSize;i++){
+      d1.push([this.Pob[i], this.FitPob[i]])
+    }
+    $.plot(divTag, [ {data:all},{data:d1, points: { show: true } }]);
   }
-  AISearch.Pob = pob
-}
-
-AISearch.EvaluaDesempeno = function(){
-  fit = []
-  for (i=0;i<AISearch.PopSize;i++){
-    fit.push(AISearch.Fitness(AISearch.Pob[i]))
-  }
-  AISearch.FitPob = fit
-}
-
-AISearch.Start = function(){
-  for (i=0; i<AISearch.NoIter; i++){
-    
-  }
-}
-
-AISearch.Fitness = function(x){
-  st = $("#MathFunc")[0].value
-  return eval(st)
-}
-
-AISearch.plot=function(divTag, all){
-  d1 = []
-  for (i=0;i<AISearch.PopSize;i++){
-    d1.push([AISearch.Pob[i], AISearch.FitPob[i]])
-  }
-  $.plot(divTag, [ {data:all},{data:d1, points: { show: true } }]);
 }
