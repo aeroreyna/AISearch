@@ -8,6 +8,7 @@
 	<script language="javascript" type="text/javascript" src="jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
   <script language="javascript" type="text/javascript" src="AISearch.js"></script>
+	<script language="javascript" type="text/javascript" src="DE.js"></script>
   <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript">
   var FitFunc = []
@@ -32,7 +33,7 @@
 
 		$( "#slider" ).slider({
 		  slide: function( event, ui ) {
-				AISearch.PopSize = ui.value
+				AISearch.PopSize = ui.value > 7 ? ui.value : 7
 			}
 		});
 	});
