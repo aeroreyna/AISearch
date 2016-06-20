@@ -5,16 +5,19 @@ AISearch = {
   InicializaPoblacion : function(){
     pob = []
     for (i=0;i<this.PopSize;i++){
-      pob.push(Math.random()*14)
+      pob.push(Math.random())
     }
     this.Pob = pob
   },
   EvaluaDesempeno : function(){
     fit = []
     for (i=0;i<this.PopSize;i++){
-      fit.push(this.Fitness(this.Pob[i]))
+      fit.push(this.Fitness(this.Pob[i]*14))
     }
     this.FitPob = fit
+  },
+  EvaluaDesempenoInd : function(ind){
+    return this.Fitness(ind*14)
   },
   Start : function(){
     for (i=0; i<this.NoIter; i++){
@@ -28,7 +31,7 @@ AISearch = {
   plot : function(divTag, all){
     d1 = []
     for (i=0;i<this.PopSize;i++){
-      d1.push([this.Pob[i], this.FitPob[i]])
+      d1.push([this.Pob[i]*14, this.FitPob[i]])
     }
     $.plot(divTag, [ {data:all},{data:d1, points: { show: true } }]);
   }
