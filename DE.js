@@ -1,7 +1,7 @@
 AISearch.DECrossover = 0.5;
 AISearch.DEF = 0.5;
 
-AISearch.DEOperadores = function(AI){
+AISearch.DEOperadores = function(){
   for (i=0;i<this.PopSize;i++){
     act  = this.Pob[i];
     ind1 = this.Pob[this.EscogeIndividuo([i])]

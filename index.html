@@ -7,9 +7,14 @@
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script language="javascript" type="text/javascript" src="jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<!-- bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
   <script language="javascript" type="text/javascript" src="AISearch.js"></script>
 	<script language="javascript" type="text/javascript" src="DE.js"></script>
-  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 	<script type="text/javascript">
   var FitFunc = []
 	function FitFuncEval(){
@@ -21,15 +26,24 @@
 		}
     $.plot("#placeholder", [FitFunc])
 	}
+	function IniciaAI(){
+		AISearch.InicializaPoblacion()
+		AISearch.EvaluaDesempeno()
+		AISearch.plotID = "#placeholder"
+		AISearch.FitFunc = FitFunc;
+		AISearch.plot(FitFunc)
+	}
 	$(function() {
 		FitFuncEval()
 
     $("#startAI").click(function(){
 			FitFuncEval()
-      AISearch.InicializaPoblacion()
-      AISearch.EvaluaDesempeno()
-      AISearch.plot("#placeholder", FitFunc)
+      IniciaAI()
     })
+		$("#StartDE").click(function(){
+			AISearch.Operadores = AISearch.DEOperadores
+			AISearch.Start();
+		})
 
 		$( "#slider" ).slider({
 		  slide: function( event, ui ) {
@@ -42,14 +56,18 @@
 </head>
 
 <body>
+	<div class="container">
 		<div class="demo-container">
 			<div id="placeholder" style="width: 600px;height:300px;"></div>
 		</div>
-    <button id="startAI">Random Positions</button>
+    <button class="btn btn-default" id="startAI">Random Positions</button>
 		<br />
-    <div id="slider" style="width: 590px;margin-top: 10px;margin-left: 10px;"></div>
+    <div id="slider" style="width: 600px;margin-top: 10px;"></div>
 		<br />
 		<label>Función: </label>
-		<input type="text" id="MathFunc" value="Math.sin(x*8)*Math.abs(x-8)">
+		<input class="form-control" type="text" id="MathFunc" style="width:600px;" value="Math.sin(x*3)*Math.abs(x-12)">
+		<br />
+		<button class="btn btn-default" id="StartDE">Start DE</button>
+	</div>
 </body>
 </html>
