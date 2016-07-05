@@ -14,60 +14,32 @@
 
   <script language="javascript" type="text/javascript" src="AISearch.js"></script>
 	<script language="javascript" type="text/javascript" src="DE.js"></script>
+	<script language="javascript" type="text/javascript" src="index.js"></script>
 
-	<script type="text/javascript">
-  var FitFunc = []
-	function FitFuncEval(){
-		FitFunc = []
-		st = $("#MathFunc")[0].value
-		for (var i = 0; i < 14; i += 0.1) {
-			x = i;
-			FitFunc.push([i, eval(st)]);
-		}
-    $.plot("#placeholder", [FitFunc])
-	}
-	function IniciaAI(){
-		AISearch.InicializaPoblacion()
-		AISearch.EvaluaDesempeno()
-		AISearch.plotID = "#placeholder"
-		AISearch.FitFunc = FitFunc;
-		AISearch.plot(FitFunc)
-	}
-	$(function() {
-		FitFuncEval()
-
-    $("#startAI").click(function(){
-			FitFuncEval()
-      IniciaAI()
-    })
-		$("#StartDE").click(function(){
-			AISearch.Operadores = AISearch.DEOperadores
-			AISearch.Start();
-		})
-
-		$( "#slider" ).slider({
-		  slide: function( event, ui ) {
-				AISearch.PopSize = ui.value > 7 ? ui.value : 7
-			}
-		});
-	});
-
-	</script>
 </head>
 
-<body>
-	<div class="container">
+<body style="max-width: 750px;">
+	<div class="container" >
+		<center>
 		<div class="demo-container">
 			<div id="placeholder" style="width: 600px;height:300px;"></div>
 		</div>
-    <button class="btn btn-default" id="startAI">Random Positions</button>
-		<br />
-    <div id="slider" style="width: 600px;margin-top: 10px;"></div>
 		<br />
 		<label>Función: </label>
 		<input class="form-control" type="text" id="MathFunc" style="width:600px;" value="Math.sin(x*3)*Math.abs(x-12)">
 		<br />
-		<button class="btn btn-default" id="StartDE">Start DE</button>
+    <br />
+		</center>
+		<div class="jumbotron" id="Controls">
+			<input type="text" class="form-control" id="PopSize" style="width:90px;float:left" value="7" disabled>
+	    <div id="slider" style="width: 500px;margin-top: 10px;margin-left:100px;"></div>
+			<br>
+			<input type="text" class="form-control" id="NoIter" style="width:90px;float:left" value="10" disabled>
+	    <div id="slider2" style="width: 500px;margin-top: 10px;margin-left:100px;"></div>
+			<br>
+			<button class="btn btn-default" id="RandomStart">Random Positions</button>
+			<button class="btn btn-default" id="StartDE">Start DE</button>
+		</div>
 	</div>
 </body>
 </html>

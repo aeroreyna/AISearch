@@ -2,6 +2,7 @@ AISearch = {
   PopSize:7,
   NoIter:10,
   NoDim : 1,
+  ActIte: 10,
   plotID: "",
   plotFunc: [],
   Operadores : function(){},
