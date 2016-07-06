@@ -1,4 +1,5 @@
 var FitFunc = []
+var histFit = []
 function FitFuncEval(){
   FitFunc = []
   st = $("#MathFunc")[0].value
@@ -18,26 +19,39 @@ function IniciaAI(){
 $(function() {
   FitFuncEval()
 
+  $("#MathFunc").keypress(function( event ) {
+    //console.log(event)
+    if ( event.which == 13 ) {
+       event.preventDefault();
+       FitFuncEval();
+    }
+  })
+
   $("#RandomStart").click(function(){
     FitFuncEval()
     IniciaAI()
   })
+
   $("#StartDE").click(function(){
     AISearch.Operadores = AISearch.DEOperadores
     //AISearch.Start(); //fast
     AISearch.ActIte = AISearch.NoIter
     $("#Controls").fadeOut()
+    histFit = [];
     setTimeout(slowAIStart, 500)
   })
 
   function slowAIStart(){
     AISearch.Operadores()
+    AISearch.sort()
+    histFit.push([histFit.length,AISearch.FitPob[0]]);
     AISearch.plot()
     //AISearch.ActIte = AISearch.ActIte - 1
     if (AISearch.ActIte-- > 0){
        setTimeout(slowAIStart, 500)
      }else{
-       $("#Controls").fadeIn()
+       $("#Controls").fadeIn();
+       $.plot("#EvoPlot", [histFit]);
      }
   }
 
