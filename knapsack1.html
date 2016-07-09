@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Knapsack Problem</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container" style="padding:10px;">
+    <div class="well">
+      <div class="row">
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Palm Tree <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/palmTree.png" style="float:right">
+              <p>Precio: <span class="priceItem">10</span></p>
+              <p>Peso: <span class="wItem">30</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Gold Price <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/price.png" style="float:right">
+              <p>Precio: <span class="priceItem">100</span></p>
+              <p>Peso: <span class="wItem">30</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Atm Machine <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/atm.png" style="float:right">
+              <p>Precio: <span class="priceItem">200</span></p>
+              <p>Peso: <span class="wItem">90</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Robot <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/robot.png" style="float:right">
+              <p>Precio: <span class="priceItem">70</span></p>
+              <p>Peso: <span class="wItem">20</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Fruits <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/fruit.png" style="float:right">
+              <p>Precio: <span class="priceItem">10</span></p>
+              <p>Peso: <span class="wItem">1</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Music Machine <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <img src="imgs/rockola.png" style="float:right">
+              <p>Precio: <span class="priceItem">50</span></p>
+              <p>Peso: <span class="wItem">20</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6">
+          <div class="panel panel-primary" id="result">
+            <div class="panel-heading">
+              Solution: <span id="solution">000000</span>
+            </div>
+            <div class="panel-body">
+              <small>maximice</small>
+              <p>Sum Precio: <span id="sumPrice">0</span> </p>
+              <small>max 100</small>
+              <p>Sum Peso: <span id="sumW">0</span> </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-sm-3 col-xs-6">
+          <div class="panel panel-success hidden" id="finished">
+            <div class="panel-heading">
+              Now Run
+            </div>
+            <div class="panel-body">
+              <img src="imgs/exitcar.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <script>
+  var sumP = 0;
+  var sumW = 0;
+  var bitData = "000000"
+  function refreshV(){
+    sumP = 0;
+    sumW = 0;
+    bitData = "";
+    prices  = $(".priceItem");
+    weights = $(".wItem");
+    checked = $(".item input");
+    for (i=0;i<checked.length;i++){
+      bitData += (checked[i].checked*1)
+      if (checked[i].checked){
+        sumP += parseInt(prices[i].innerHTML);
+        sumW += parseInt(weights[i].innerHTML);
+      }
+    }
+    console.log(sumP)
+    $("#sumPrice")[0].innerHTML=sumP;
+    $("#sumW")[0].innerHTML=sumW;
+    $("#solution")[0].innerHTML=bitData;
+
+    if (sumW>100){
+      $("#result").removeClass("panel-primary panel-success");
+      $("#result").addClass("panel-danger");
+      $("#finished").addClass("hidden");
+    }else{
+      if (bitData=="110101"){
+        $("#result").removeClass("panel-danger panel-primary");
+        $("#result").addClass("panel-success");
+        $("#finished").removeClass("hidden")
+      }else {
+        $("#result").removeClass("panel-danger panel-success");
+        $("#result").addClass("panel-primary");
+        $("#finished").addClass("hidden");
+      }
+    }
+  }
+  $(document).on("ready",function(){
+    $(".item input").on("click", function(){refreshV()});
+  })
+  </script>
+</body>
+</html>
