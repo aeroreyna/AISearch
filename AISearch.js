@@ -14,11 +14,25 @@ AISearch = {
     }
     this.Pob = pob;
   },
+  InicializaPoblacionBin(){
+    pob = [];
+    for (i=0;i<this.PopSize;i++){
+      ind = []
+      for (j=0;j<this.NoDim;j++){
+        ind.push(Math.floor(Math.random()*2))
+      }
+      pob.push(ind);
+    }
+    this.Pob = pob;
+  },
   EvaluaDesempeno : function(){
     fit = [];
-    for (i=0;i<this.PopSize;i++){
-      fit.push(this.Fitness(this.Pob[i]*14));
-    }
+    //for (i=0;i<this.PopSize;i++){
+    //  fit.push(this.Fitness(this.Pob[i]));
+    //}
+    this.Pob.forEach(function(entry){
+      fit.push(this.Fitness(entry));
+    },this)
     this.FitPob = fit;
   },
   EvaluaDesempenoInd : function(ind){
@@ -53,4 +67,29 @@ AISearch = {
     }
     $.plot(this.plotID, [ {data:all},{data:d1, points: { show: true } }]);
   }
+}
+
+function sortArg(A){
+  No = A.length;
+  indexs = [];
+  for(i=0;i<No;i++){
+    newInd = 0;
+    minVal = Infinity;
+    for(k=0;k<No;k++){
+      if(isInIt(indexs,k)==false){
+        if (A[k]<minVal){
+          minVal = A[k];
+          newInd = k;
+        }
+      }
+    }
+    indexs.push(newInd)
+  }
+  return indexs;
+}
+function isInIt(A, val){
+  for(j=0;j<A.length;j++){
+    if(A[j] == val ) return true;
+  }
+  return false;
 }

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Knapsack Problem</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container" style="padding:10px;">
+    <small id="title"></small>
+    <div class="well">
+      <div class="row">
+
+<div id="items">
+        <div class="col-lg-2 col-sm-3 col-xs-6 item">
+          <div class="panel panel-default">
+            <div class="panel-heading">Item <input type="checkbox" style="float:right"></input></div>
+            <div class="panel-body">
+              <p>Precio: <span class="priceItem">10</span></p>
+              <p>Peso: <span class="wItem">30</span></p>
+            </div>
+          </div>
+        </div>
+</div>
+        <div class="col-lg-2 col-sm-3 col-xs-6">
+          <div class="panel panel-primary" id="result">
+            <div class="panel-heading">
+              Solution: <span id="solution">000000</span>
+            </div>
+            <div class="panel-body">
+              <small>maximice</small>
+              <p>Sum Precio: <span id="sumPrice">0</span> </p>
+              <small>max <span id="maxW">100</span></small>
+              <p>Sum Peso: <span id="sumW">0</span> </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <script>
+  var NoItems = 10;
+  var Range = 30;
+  var maxW = 100;
+  var sumP = 0;
+  var sumW = 0;
+  var bitData = "000000";
+
+  function getQueryParam(param) {
+      location.search.substr(1)
+          .split("&")
+          .some(function(item) { // returns first occurence and stops
+              return item.split("=")[0] == param && (param = item.split("=")[1])
+          })
+      return param
+  }
+
+  function refreshV(){
+    sumP = 0;
+    sumW = 0;
+    bitData = "";
+    prices  = $(".priceItem");
+    weights = $(".wItem");
+    checked = $(".item input");
+    for (i=0;i<checked.length;i++){
+      bitData += (checked[i].checked*1);
+      if (checked[i].checked){
+        sumP += parseInt(prices[i].innerHTML);
+        sumW += parseInt(weights[i].innerHTML);
+      }
+    }
+    $("#sumPrice")[0].innerHTML=sumP;
+    $("#sumW")[0].innerHTML=sumW;
+    $("#solution")[0].innerHTML=bitData;
+
+    if (sumW>maxW){
+      $("#result").removeClass("panel-primary");
+      $("#result").addClass("panel-danger");
+    }else{
+      $("#result").removeClass("panel-danger");
+      $("#result").addClass("panel-primary");
+    }
+  }
+  $(document).on("ready",function(){
+    NoItems = getQueryParam("NoItems")!="NoItems" ? getQueryParam("NoItems") : NoItems;
+    Range = getQueryParam("Range")!="Range" ? getQueryParam("Range") : Range;
+    maxW = getQueryParam("maxW")!="maxW" ? getQueryParam("maxW") : maxW;
+    $("#maxW")[0].innerHTML=maxW;
+    $("#title")[0].innerHTML="Number of possible convinations: " + Math.pow(2,NoItems);
+
+    temp = $(".item").clone();
+    $(".item").remove();
+    for (i=0;i<NoItems;i++){
+      $("#items").append(temp.clone());
+      tempP = Math.floor(Math.random()*Range)+1;
+      tempW = Math.floor(Math.random()*Range)+1;
+      $(".priceItem")[$(".priceItem").length-1].innerHTML=tempP;
+      $(".wItem")[$(".wItem").length-1].innerHTML=tempW;
+    }
+    $("#items").on("click", 'input', function(){refreshV()});
+  })
+  </script>
+</body>
+</html>
