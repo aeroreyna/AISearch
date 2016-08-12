@@ -45,6 +45,7 @@ AISearch = {
     }
   },
   Fitness : function(x){
+    x = x*14;
     st = $("#MathFunc")[0].value;
     return eval(st);
   },
