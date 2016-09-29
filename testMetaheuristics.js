@@ -15,7 +15,7 @@ function FitFuncEval(){
 function plotSolutions(){
   var population = [];
   for(i=0;i<AISearch.sizePopulation;i++){
-    population.push([AISearch.population[i]*14,AISearch.fitness[i]]);
+    population.push([AISearch.population[i][0]*14,AISearch.fitness[i]]);
   }
   $.plot("#graph1", [{data:FitFunc}, {data:population, points: { show: true }}]);
 }
