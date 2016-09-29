@@ -40,7 +40,7 @@ metaheuristic.prototype ={
       this.updateBest();
       this.historicBestSolution[index] = this.bestSolution;
       this.historicBestFitness[index] = this.bestFitness;
-      
+
       if(this.plotEachIterationB) this.plot();
       if(this.eachIterationFunction!=undefined) this.eachIterationFunction(obj);
     }, this);
@@ -86,14 +86,9 @@ metaheuristic.prototype ={
     var local = population ? true : false;
     population = population || this.population;
     for(var i=0;i<population.length;i++){
-      if(this.noDimensions>1){
-        for(var j=0;i<this.noDimensions;j++){
-          population[i][j]= population[i][j]>1 ? 1 : population[i];
-          population[i][j]= population[i][j]<0 ? 0 : population[i];
-        }
-      }else {
-        population[i]= population[i]>1 ? 1 : population[i];
-        population[i]= population[i]<0 ? 0 : population[i];
+      for(var j=0;i<this.noDimensions;j++){
+        population[i][j]= population[i][j]>1 ? 1 : population[i];
+        population[i][j]= population[i][j]<0 ? 0 : population[i];
       }
     }
     if(local == false) this.population = population;
@@ -102,34 +97,26 @@ metaheuristic.prototype ={
   operatorsDE:function(){
     var crossoverRate = 0.7;
     var differentialWeight = 0.5;
+    //console.table(this.population);
     //implementation
     for(var i=0;i<this.sizePopulation;i++){
       selected = this.selectNDifferentSolutions(this.sizePopulation,5);
       selectedDim = randi(this.noDimensions);
-      solutionBase = this.population[selected[0]];
-      if(this.noDimensions>1){
-        for(var j=0;j<this.noDimensions;j++){
-          if(selectedDim== j || Math.random()>crossoverRate){
-            solutionBase[j] = this.bestSolution[j] +
-              differentialWeight*(this.population[selected[1]][j] -
-                                 this.population[selected[2]][j]) +
-              differentialWeight*(this.population[selected[3]][j] -
-                                 this.population[selected[4]][j]);
-            solutionBase[j] = solutionBase[j]>1 ? 1 : solutionBase[j];
-            solutionBase[j] = solutionBase[j]<0 ? 0 : solutionBase[j];
-          }
+      solutionBase = this.population[selected[0]].slice(); // .slice() make it work
+      for(var j=0;j<this.noDimensions;j++){
+        if(selectedDim== j || Math.random()>crossoverRate){
+          solutionBase[j] = this.bestSolution[j] +
+            differentialWeight*(this.population[selected[1]][j]  -
+                                this.population[selected[2]][j]) +
+            differentialWeight*(this.population[selected[3]][j]  -
+                                this.population[selected[4]][j]);
+          solutionBase[j] = solutionBase[j]>1 ? 1 : solutionBase[j];
+          solutionBase[j] = solutionBase[j]<0 ? 0 : solutionBase[j];
         }
-      }else{
-        solutionBase = this.bestSolution +
-          differentialWeight*(this.population[selected[1]] -
-                             this.population[selected[2]]) +
-          differentialWeight*(this.population[selected[3]] -
-                             this.population[selected[4]]);
-        solutionBase = solutionBase>1 ? 1 : solutionBase;
-        solutionBase = solutionBase<0 ? 0 : solutionBase;
       }
-      tempFit = this.evalPopulation([solutionBase]);
+      tempFit = this.evalPopulation(solutionBase);
       if(tempFit[0]<this.fitness[selected[0]]){
+        console.log(this.population[selected[0]], this.fitness[selected[0]], solutionBase, tempFit[0]);
         this.fitness[selected[0]] = tempFit[0];
         this.population[selected[0]] = solutionBase;
       }
@@ -149,12 +136,8 @@ metaheuristic.prototype ={
 function zeros(long,deep){
   var b = [];
   for(var i=0;i<long;i++){
-    if(deep>1){
-      var a = new Array(deep);
-      a.fill(0);
-    }else{
-      var a = 0;
-    }
+    var a = new Array(deep);
+    a.fill(0);
     b.push(a);
   }
   return b;
@@ -162,13 +145,9 @@ function zeros(long,deep){
 function rand(long,deep){
   var a = zeros(long,deep);
   for(var i=0;i<long;i++){
-    if(deep==1){
-      a[i] = Math.random();
-    }else{
-      for(var j=0;j<deep;j++){
-        a[i][j] = Math.random();
-        console.log(a)
-      }
+    for(var j=0;j<deep;j++){
+      a[i][j] = Math.random();
+      //console.log(a)
     }
   }
   return a;
