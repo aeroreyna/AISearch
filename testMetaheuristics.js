@@ -46,10 +46,21 @@ $(function() {
     AISearch.initialPopulation();
     AISearch.evalPopulation();
     AISearch.plot();
+    $("#StartDE").prop( "disabled", false );
+    $("#StartPSO").prop( "disabled", false );
   })
 
   $("#StartDE").click(function(){
+    AISearch.operators = AISearch.operatorsDE;
     AISearch.start()
+    $("#StartDE").prop( "disabled", true );
+    $("#StartPSO").prop( "disabled", true );
+  })
+  $("#StartPSO").click(function(){
+    AISearch.operators = AISearch.operatorsPSO;
+    AISearch.start()
+    $("#StartDE").prop( "disabled", true );
+    $("#StartPSO").prop( "disabled", true );
   })
 
   $( "#slider" ).slider({
