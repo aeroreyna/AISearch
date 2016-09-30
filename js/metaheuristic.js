@@ -86,9 +86,9 @@ metaheuristic.prototype ={
     var local = population ? true : false;
     population = population || this.population;
     for(var i=0;i<population.length;i++){
-      for(var j=0;i<this.noDimensions;j++){
-        population[i][j]= population[i][j]>1 ? 1 : population[i];
-        population[i][j]= population[i][j]<0 ? 0 : population[i];
+      for(var j=0;j<this.noDimensions;j++){
+        population[i][j]= population[i][j]>1 ? 1 : population[i][j];
+        population[i][j]= population[i][j]<0 ? 0 : population[i][j];
       }
     }
     if(local == false) this.population = population;
@@ -129,6 +129,42 @@ metaheuristic.prototype ={
       resp.push(temp[i]);
     }
     return resp;
+  },
+  operatorsPSO:function(){
+    var bestPersonalParam = 0.3;
+    var bestParam = 0.4;
+    var velocityParam = 0.9;
+
+    // PSO Memory (velocity and personal best positions)
+    if(this.bestPersonal == undefined || this.velocity == undefined) this.initilicePSO()
+    if(this.bestPersonal.length != this.sizePopulation || this.velocity.length != this.sizePopulation) this.initilicePSO()
+
+    // Update best personal positions
+    for(var i=0;i<this.sizePopulation;i++){
+      if(this.fitness[i]<this.bestPersonalF[i]){
+        this.bestPersonalF[i] = this.fitness[i] + 0;
+        this.bestPersonal[i] = this.population[i].slice();
+      }
+    }
+    //console.table(this.population);
+    //implementation
+    for(var i=0;i<this.sizePopulation;i++){
+      for(var j=0;j<this.noDimensions;j++){
+        pbAtraction = Math.random() * (this.bestPersonal[i][j] - this.population[i][j]);
+        bestAtraction = Math.random() * (this.bestSolution[j] - this.population[i][j]);
+        this.velocity[i][j] = velocityParam * this.velocity[i][j] +
+                       bestPersonalParam * pbAtraction + bestParam * bestAtraction;
+        this.population[i][j] = this.population[i][j] + this.velocity[i][j];
+      }
+    }
+    this.checkBounds();
+    // eval fitness
+    this.evalPopulation();
+  },
+  initilicePSO:function(){
+    this.bestPersonal = this.population.slice();
+    this.bestPersonalF = this.fitness.slice();
+    this.velocity = zeros(this.sizePopulation, this.noDimensions);
   }
 }
 

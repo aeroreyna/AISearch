@@ -32,7 +32,7 @@ $(function() {
   AISearch.customPlotFunction = plotSolutions;
   AISearch.sizePopulation=7;
   AISearch.maxNoIterations=10;
-  AISearch.operators = AISearch.operatorsDE;
+  AISearch.operators = AISearch.operatorsPSO;
 
   $("#MathFunc").keypress(function( event ) {
     //console.log(event)
