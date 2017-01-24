@@ -1,0 +1,63 @@
+body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+#MathFunc {
+    position: absolute;
+    z-index: 1000;
+    top: -5px;
+    left: 0px;
+}
+div#Controls {
+    position: absolute;
+    right: -40%;
+    top: 43px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+div#Controls:hover {
+    right: 0;
+    left: inherit;;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+div#GraphControls {
+    position: absolute;
+    left: -40%;
+    top: 43px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+div#GraphControls:hover {
+    left: 0;;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+.panel{
+  background-color: rgba(255,255,255,0.3);
+}
+#BenchmarkInfo{
+  position:absolute;
+  bottom: 10px;
+  right: 10px;
+  opacity: 0.5;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+#BenchmarkInfo:hover{
+  opacity: 1;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}

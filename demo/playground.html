@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Playground</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="external/keen-ui.css">
+    <link rel="stylesheet" href="playground.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  </head>
+  <body>
+    <div>
+    <div clas="row">
+  		<div class="demo-container col-md-12" id="graphDiv">
+        <div class="row">
+    			<div id="graph"><!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+  			<input class="form-control" type="text" id="MathFunc" value="BF.ackley.eval([x,y])">
+  		</div>
+      <div class="col-md-6" id="Controls">
+        <div class="panel panel-default">
+  			<div class="panel-heading">AI Controls</div>
+    		<div class="panel-body" id="algControlsVue">
+          <p class="col-md-11"><ui-slider :value.sync="sizePopulation" v-on:click="changesF" label="Size of the Population"></ui-slider></p>
+          <p class="col-md-1">{{sizePopulation}}</p>
+          <p class="col-md-11"><ui-slider :value.sync="noIter" v-on:click="changesF" label="Number of iterations"></ui-slider></p>
+          <p class="col-md-1">{{noIter}}</p>
+  			<form class="form-horizontal" onsubmit="event.preventDefault();">
+  				<button class="btn btn-default" id="RandomStart">Random Positions</button>
+  				<button class="btn btn-default" id="StartDE">Start DE</button>
+  				<button class="btn btn-default" id="StartPSO">Start PSO</button>
+  			</form>
+  			</div>
+  			<div id="EvoPlot" style="width: 600px;height:300px;" class="hidden"></div>
+  		</div>
+  		<div id="alertas">
+  		</div>
+    </div>
+    </div>
+    <div class="col-md-6" id="GraphControls">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="text-align: right;">Graph Controls</div>
+        <div class="panel-body" id="graphControlsVue">
+          <ui-select :value.sync="selectedBF"
+          name="BF" label="Fintess Function" :options="listBF"
+          placeholder="Ackley, Bird, etc.." show-search ></ui-select>
+          <p><ui-checkbox :model.sync="opacity">Transparent Plot</ui-checkbox></p>
+          <p>Range X <input v-model="lowx"> <input v-model="highx"></p>
+          <p>Range Y <input v-model="lowy"> <input v-model="highy"></p>
+          <div class="row">
+            <p class="col-md-11"><ui-slider :value.sync="resolution" step:50 v-on:click="resChange" label="Resolution"></ui-slider></p>
+            <p class="col-md-1">{{resolution}}</p>
+          </div>
+          <p><ui-checkbox :model.sync="shownOptimal">Show known optimal</ui-checkbox></p>
+          <h4>Population Points</h4>
+          <div class="row">
+            <p class="col-md-11"><ui-slider :value.sync="sizePoints" v-on:click="popGraphChange" label="Size of the Points"></ui-slider></p>
+            <p class="col-md-1">{{sizePoints}}</p>
+            <p class="col-md-11"><ui-slider :value.sync="opacityPoints" v-on:click="popGraphChange" label="Opacity"></ui-slider></p>
+            <p class="col-md-1">{{opacityPoints}}</p>
+          </div>
+          <p><ui-checkbox :model.sync="pointBest" v-on:click="popGraphChange">Diferenciate Bestpoints</ui-checkbox></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" id="BenchmarkInfo">
+      <h4>Benchmark Info</h4>
+      <p>Name: {{name}}</p>
+      <!-- <p>Separable: {{Separable}}</p>
+      <p>Differenciable: {{differenciable}}</p>
+      <p>Continuous: {{continuous}}</p>
+      <p>Multimodal: {{multimodal}}</p>-->
+      <p>Optimal Position: {{minimumPosition2D}}</p>
+      <p>Optimal: {{minimumFitness}}</p>
+      <hr />
+      <p>Best Solution: {{bSol}}</p>
+      <p>Error Fitness: {{errorFit}}</p>
+    </div>
+  	</div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Vue and Keen-ui libraries -->
+    <script src="external/vue.js"></script>
+    <script src="external/keen-ui.js"></script>
+
+    <script src="../dist/aisearch.js"></script>
+    <script src="playground.js"></script>
+  </body>
+</html>
