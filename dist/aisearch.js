@@ -18,6 +18,8 @@ AISearch = {
   fitnessFunction : undefined,
   noDimensions : 2,
   benchmarkFunctions: {},
+  selectedBF: undefined,
+  operators : undefined,
   //Properties for data visualization
   historicBestSolution : [],
   historicBestFitness : [],
@@ -27,7 +29,10 @@ AISearch = {
   plotPopulationB    : false, //Plot the actual population
   plotBestSolutionB  : false, //Plot the actual best solution
   plotHistoricB      : true,  //Plot the historic record
-  operators : undefined,
+  //SpecificLibraries
+  plotly: undefined,
+  mainPlot: {div: undefined, layout:undefined, data:undefined},
+  historicPlot: {div: undefined, layout:undefined, data:undefined},
 }
 AISearch.start = function(){
   if(this.fitnessFunction==undefined) return -1;
@@ -87,7 +92,7 @@ AISearch.evalPopulation = function(population){
   population = population || this.population;
   var fit = zeros(population.length,1);
   for(var i=0;i<population.length;i++){
-    fit[i]=this.fitnessFunction(population[i]);
+    fit[i]=this.fitnessFunction(population[i].slice());
   }
   if(local == false) this.fitness = fit;
   return fit;
@@ -152,6 +157,24 @@ function randperm(N){
 }
 function randi(N){
   return Math.floor(Math.random()*N-0.000001);
+}
+
+AISearch.selectBF = function(name){
+  this.selectedBF = this.benchmarkFunctions[name];
+  if(this.selectedBF){
+    this.fitnessFunction = this.selectedBF.eval;
+    if(typeof this.selectedBF.lowLimit=="number"){
+      this.selectedBF.lowx = this.selectedBF.lowLimit;
+      this.selectedBF.highx = this.selectedBF.highLimit;
+      this.selectedBF.lowy = this.selectedBF.lowLimit;
+      this.selectedBF.highy = this.selectedBF.highLimit;
+    }else{
+      this.selectedBF.lowx = this.selectedBF.lowLimit[0];
+      this.selectedBF.highx = this.selectedBF.highLimit[0];
+      this.selectedBF.lowy = this.selectedBFlowLimit[1];
+      this.selectedBF.highy = this.selectedBF.highLimit[1];
+    }
+  }
 }
 
 AISearch.selectNDifferentSolutions =  function(sizePopulation, N){
@@ -494,3 +517,156 @@ AISearch.benchmarkFunctions.schwefel = {
   multimodal: true,
   multipleGlobal: false,
   }
+
+AISearch.graphData = function(type="surface", resolution=100){
+  bounds = this.selectedBF || {highx:1, highy:1, lowx:0, lowy:0};
+  if(type=="surface"){
+    var x = new Array(resolution),
+        y = new Array(resolution),
+        z = new Array(resolution),
+        i, j;
+    for(var i = 0; i < resolution; i++) {
+      x[i] = y[i] = i / resolution;
+      z[i] = new Array(resolution);
+    }
+    for(var i = 0; i < resolution; i++) {
+      for(j = 0; j < resolution; j++) {
+        z[j][i] = this.fitnessFunction([x[i],y[j]]);
+      }
+    }
+    //Adjust Bondaries
+    for(var i = 0; i < resolution; i++) {
+      x[i] = x[i] * (bounds.highx-bounds.lowx) + bounds.lowx;
+      y[i] = y[i] * (bounds.highy-bounds.lowy) + bounds.lowy;
+    }
+    return {x:x, y:y, z:z};
+  }
+};
+
+AISearch.plot3D = function(div=undefined, type="surface", resolution=100){
+  if(div){
+    this.mainPlot.div = div;
+  }else{
+    if(this.mainPlot.div){
+      div = this.mainPlot.div;
+    }else{
+      console.error("No HTML div was given")
+    }
+  }
+  if(this.noDimensions < 2) console.error("Dimensions dismatch");
+  if(this.noDimensions > 2) console.warn("Only 2 dimensions can be plot");
+  var t = this.graphData(type, resolution);
+  this.mainPlot.data = [ {
+    z: t.z,
+    x: t.x,
+    y: t.y,
+    type: type,
+    name: "Fitness Function",
+    showscale: false,
+    opacity:1
+  }];
+  this.updatePlot();
+}
+
+AISearch.plotPopulation = function(){
+  popParams = this.mainPlot.popParams;
+  bounds = this.selectedBF || {highx:1, highy:1, lowx:0, lowy:0};
+  var x = [],
+      y = [],
+      z = [];
+  for(var i=0;i<this.sizePopulation;i++){
+    x.push(this.population[i][0] * (bounds.highx-bounds.lowx) + bounds.lowx);
+    y.push(this.population[i][1] * (bounds.highy-bounds.lowy) + bounds.lowy);
+    z.push(this.fitness[i]);
+  }
+  var tempData = {
+    z: z,
+    x: x,
+    y: y,
+    mode: 'markers',
+    type: 'scatter3d',
+    name: "Population",
+    marker: {
+      color: 'rgb(23, 190, 207)',
+      size: popParams.sizePoints,
+    },
+    opacity: popParams.opacity,
+    uid:350, //Forced ID
+  };
+  //Plot Population
+  var plotID = this.findPlot("Population");
+  if(plotID == -1){
+    this.mainPlot.data.push(tempData);
+  }else{
+    this.mainPlot.data[plotID] = tempData;
+  }
+
+  //Plot Best Solution
+  if(this.bestFitness!=Infinity){
+    var tempData2 = {
+      z: [this.bestFitness],
+      x: [this.bestSolution[0]* (bounds.highx-bounds.lowx) + bounds.lowx],
+      y: [this.bestSolution[1]* (bounds.highy-bounds.lowy) + bounds.lowy],
+      mode: 'markers',
+      type: 'scatter3d',
+      name: "Best Solution",
+      marker: {
+        color: 'rgb(255, 50, 50)',
+        size: popParams.sizePoints + 3,
+      },
+      opacity: popParams.opacity,
+      uid:351, //Forced ID
+    };
+    plotID = this.findPlot("Best Solution");
+    if(plotID == -1){
+      this.mainPlot.data.push(tempData2);
+    }else{
+      this.mainPlot.data[plotID] = tempData2;
+    }
+  }
+  this.updatePlot();
+};
+AISearch.findPlot = function(plotName){
+  var n = this.mainPlot.data.length;
+  for(var i=0;i<n;i++){
+    if( this.mainPlot.data[i].name == plotName) return i;
+  }
+  return -1;
+};
+
+AISearch.initPlotly3D = function(plotly, title='Metaheuristics Playground'){
+  this.mainPlot.layout = {
+    title: title,
+    width: "500",
+    height: "500",
+    showleyend: false,
+    scene:{
+      aspectmode: "cube",
+    }
+  };
+  this.mainPlot.popParams = {
+    highx:1,
+    lowx:0,
+    highy:1,
+    lowy:0,
+    sizePoints:7,
+    opacity:1
+  };
+  this.mainPlot.bestParams ={
+    sizePoints:10,
+    opacity:true,
+  }
+  if(plotly){
+    this.plotly = plotly;
+    return 1;
+  }
+  if(window.Plotly){
+    this.plotly = window.Plotly;
+    return 1;
+  }
+  console.log("Plotly library is not pressent");
+};
+
+AISearch.updatePlot = function(){
+  this.plotly.newPlot(this.mainPlot.div, this.mainPlot.data, this.mainPlot.layout);
+}

@@ -21,7 +21,8 @@ module.exports = function(grunt) {
         src: ['lib/aisearch.js',
               'lib/util/*.js',
               'lib/algorithms/*.js',
-              'lib/benchmarkFunctions/*.js'],
+              'lib/benchmarkFunctions/*.js',
+              'lib/graph/*.js'],
         dest: 'dist/aisearch.js'
       }
     },
@@ -39,7 +40,8 @@ module.exports = function(grunt) {
         files: ['lib/aisearch.js',
               'lib/util/*.js',
               'lib/algorithms/*.js',
-              'lib/benchmarkFunctions/*.js'],
+              'lib/benchmarkFunctions/*.js',
+              'lib/graph/*.js'],
         tasks: ['concat'],
         options: {
           nospawn: true,
