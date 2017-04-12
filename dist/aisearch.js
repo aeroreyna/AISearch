@@ -171,7 +171,7 @@ AISearch.selectBF = function(name){
     }else{
       this.selectedBF.lowx = this.selectedBF.lowLimit[0];
       this.selectedBF.highx = this.selectedBF.highLimit[0];
-      this.selectedBF.lowy = this.selectedBFlowLimit[1];
+      this.selectedBF.lowy = this.selectedBF.lowLimit[1];
       this.selectedBF.highy = this.selectedBF.highLimit[1];
     }
   }
@@ -229,6 +229,7 @@ function zeros(long,deep){
   return b;
 }
 
+
 AISearch.operatorsDE = function(){
   var crossoverRate = 0.7,
       differentialWeight = 0.5;
@@ -256,6 +257,11 @@ AISearch.operatorsDE = function(){
     }
   }
 };
+
+AISearch.operatorsGA = function(){
+  
+}
+
 
 AISearch.initilicePSO = function(){
   this.bestPersonal = this.population.slice();
@@ -490,6 +496,54 @@ AISearch.benchmarkFunctions.branin = {
   scalable: false,
   multimodal: true,
   multipleGlobal: true,
+}
+
+AISearch.benchmarkFunctions.brown = {
+  eval: function(x){
+    var n = x.length,
+        i = 0;
+    for(i = 0; i<n; i++){
+      x[i] = 5 * x[i] - 1;
+    }
+    var tempSum = 0;
+    for(i = 0; i<n-1; i++){
+      tempSum += Math.pow(Math.pow(x[i], 2), Math.pow(x[i+1], 2) + 1) +
+                 Math.pow(Math.pow(x[i+1], 2),  Math.pow(x[i], 2) +1);
+    }
+    return tempSum;
+  },
+  name:"brown",
+  lowLimit: -1,
+  highLimit: 4,
+  minimumFitness:  0,
+  minimumPosition2D: [0, 0],
+  continuous: true,
+  differenciable: true,
+  Separable: false,
+  scalable: true,
+  multimodal: false,
+  multipleGlobal: false,
+}
+
+AISearch.benchmarkFunctions.bukin4 = {
+  eval: function(x){
+    var n = x.length,
+        i = 0;
+    x[0] = x[0] * 10 - 15;
+    x[1] = x[1] * 6 - 3;
+    return 100*Math.pow(x[1],2) + 0.01 * Math.abs(x[0]+10);
+  },
+  name:"bukin4",
+  lowLimit: [-15, -3],
+  highLimit: [-5, 3],
+  minimumFitness:  0,
+  minimumPosition2D: [-10, 0],
+  continuous: true,
+  differenciable: true,
+  Separable: false,
+  scalable: false,
+  multimodal: true,
+  multipleGlobal: false,
 }
 
 AISearch.benchmarkFunctions.schwefel = {
